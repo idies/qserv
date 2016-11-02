@@ -37,7 +37,7 @@ import cloudmanager
 
 def main():
 
-    userdata = cloudManager.build_cloudconfig(cloudmanager.SWARM_NODE)
+    userdata = cloudManager.build_cloudconfig()
 
     # Create instances list
     instances = []

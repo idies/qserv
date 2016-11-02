@@ -407,11 +407,10 @@ class CloudManager(object):
                 logging.error("ERROR while updating /etc/hosts: %s", exc.output)
                 sys.exit(1)
 
-    def build_cloudconfig(self, server_profile=DOCKER_NODE, instance_last_id=""):
+    def build_cloudconfig(self):
         """
-        Build cloudconfig configuration for a given server profile
+        Build cloudconfig configuration
 
-        @param server_profile:      Can be DOCKER_NODE or SWARM_NODE
         """
 
         cloud_config = '''
@@ -429,25 +428,16 @@ users:
   shell: /bin/bash
   ssh-authorized-keys:
   - {key}
-  sudo: ALL=(ALL) NOPASSWD:ALL'''
-
-        cloud_config += '''
+  sudo: ALL=(ALL) NOPASSWD:ALL
 
 runcmd:
   - [/tmp/detect_end_cloud_config.sh]
-'''
-
-        if server_profile == SWARM_NODE:
-            cloud_config += '''
   # Use overlay storage
-  - [sed, -i, 's,ExecStart=/usr/bin/docker daemon -H fd://,ExecStart=/usr/bin/docker daemon -H unix:///var/run/docker.sock -H tcp://0.0.0.0:2375 --storage-driver=overlay,', /usr/lib/systemd/system/docker.service]
+  - [sed, -i, 's|ExecStart=/usr/bin/dockerd|ExecStart=/usr/bin/dockerd --storage-driver=overlay|', /usr/lib/systemd/system/docker.service]
   # Data and log are stored on Openstack host
   - [mkdir, -p, /qserv/data]
   - [mkdir, -p, /qserv/log]
   - [chown, -R, qserv, /qserv]
-'''
-
-        cloud_config += '''
   - [/bin/systemctl, daemon-reload]
   - [/bin/systemctl, restart,  docker.service]'''
 
@@ -455,7 +445,8 @@ runcmd:
         public_key = fpubkey.read()
 
         userdata = cloud_config.format(key=public_key,
-                                       hostname_tpl=self._hostname_tpl+"{node_id}")
+                                       hostname_tpl=self._hostname_tpl
+                                       + "{node_id}")
 
         logging.debug("cloud-config userdata: \n%s", userdata)
         return userdata
