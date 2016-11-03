@@ -71,20 +71,20 @@ def main():
 
     instances.append(gateway_instance)
 
-    instance_name = "master"
+    instance_name = "master0"
     instance = cloudManager.nova_servers_create(instance_name,
                                                 userdata)
     instances.append(instance)
 
     # Create worker instances
-    for instance_id in range(0, args.nbWorker-1):
+    for instance_id in range(0, args.nbWorker):
         instance_name = 'worker{}'.format(instance_id)
         instance = cloudManager.nova_servers_create(instance_name,
                                                            userdata)
         instances.append(instance)
 
     # Create swarm instances
-    for instance_id in range(0, args.nbSwarm-1):
+    for instance_id in range(0, args.nbSwarm):
         instance_name = 'swarm{}'.format(instance_id)
         instance = cloudManager.nova_servers_create(instance_name,
                                                            userdata)
@@ -99,7 +99,7 @@ SWARM_LAST_ID="{swarm_last_id}"
 HOSTNAME_TPL="{hostname_tpl}"
 WORKER_LAST_ID="{worker_last_id}"
 
-printf -v MASTER "%smaster" "$HOSTNAME_TPL"
+printf -v MASTER "%smaster0" "$HOSTNAME_TPL"
 
 for i in $(seq 0 "$SWARM_LAST_ID");
 do
@@ -107,7 +107,7 @@ do
 done
 
 # Swarm leader at initialization has id=0
-printf -v SWARM_LEADER "%s %sswarm0" "$SWARM_LEADER" "$HOSTNAME_TPL"
+printf -v SWARM_LEADER "%sswarm0" "$HOSTNAME_TPL"
 
 for i in $(seq 0 "$WORKER_LAST_ID");
 do
@@ -140,7 +140,7 @@ if __name__ == "__main__":
         # Define command-line arguments
         parser = argparse.ArgumentParser(description='Boot instances from image containing Docker.')
         parser.add_argument('-w', '--nb-worker', dest='nbWorker',
-                            required=False, default=3, type=int,
+                            required=False, default=4, type=int,
                             help='Number of worker nodes to boot')
         parser.add_argument('-s', '--nb-swarm', dest='nbSwarm',
                             required=False, default=3, type=int,
