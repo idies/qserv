@@ -55,10 +55,6 @@ def _get_nova_creds():
 BASE_IMAGE_KEY='base_image_name'
 SNAPSHOT_IMAGE_KEY='snapshot_name'
 
-# Profile used to build cloud-init file
-DOCKER_NODE = "docker_node"
-SWARM_NODE = "swarm_node"
-
 def add_parser_args(parser):
     """
     Configure the parser

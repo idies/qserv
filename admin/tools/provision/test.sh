@@ -68,7 +68,10 @@ fi
 
 if [ -n "$PROVISION" ]; then
     echo "Provision Qserv cluster on Openstack"
-    "$DIR/provision-qserv.py" --cleanup --config "$CONF_FILE" --nb-servers "$NB_SERVERS" -vv
+    "$DIR/provision-qserv.py" --cleanup --config "$CONF_FILE" \
+		--nb-worker "$NB_WORKER"  \
+		--nb-swarm "$NB_SWARM"  \
+		-vv
 fi
 
 . "$DIR/env-infrastructure.sh"

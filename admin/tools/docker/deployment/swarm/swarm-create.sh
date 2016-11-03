@@ -10,10 +10,10 @@ DIR=$(cd "$(dirname "$0")"; pwd -P)
 SSH_CFG="$DIR/ssh_config"
 
 echo "Create Swarm cluster and Docker overlay network"
-scp -F "$SSH_CFG" -r "$DIR/manager" "$SWARM_NODE":/home/qserv
-scp -F "$SSH_CFG" "$DIR/env-infrastructure.sh" "${SWARM_NODE}:/home/qserv/manager"
-ssh -F "$SSH_CFG" "$SWARM_NODE" "/home/qserv/manager/1_create.sh"
-JOIN_CMD="$(ssh -F "$SSH_CFG" "$SWARM_NODE" "/home/qserv/manager/2_print-join-cmd.sh")"
+scp -F "$SSH_CFG" -r "$DIR/manager" "$SWARM_LEADER":/home/qserv
+scp -F "$SSH_CFG" "$DIR/env-infrastructure.sh" "${SWARM_LEADER}:/home/qserv/manager"
+ssh -F "$SSH_CFG" "$SWARM_LEADER" "/home/qserv/manager/1_create.sh"
+JOIN_CMD="$(ssh -F "$SSH_CFG" "$SWARM_LEADER" "/home/qserv/manager/2_print-join-cmd.sh")"
 
 # Join swarm nodes:
 #   - Qserv master has index 0
