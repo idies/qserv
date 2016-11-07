@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Create Swarm cluster and Docker network 
+# Create Swarm cluster and Docker network
 
 # @author Fabrice Jammes SLAC/IN2P3
 
@@ -16,13 +16,23 @@ echo "Create Swarm cluster and Docker overlay network"
 scp -F "$SSH_CFG" -r "$DIR/manager" "$SWARM_LEADER":/home/qserv
 scp -F "$SSH_CFG" "$DIR/env-infrastructure.sh" "${SWARM_LEADER}:/home/qserv/manager"
 ssh -F "$SSH_CFG" "$SWARM_LEADER" "/home/qserv/manager/1_create.sh"
+
+JOIN_CMD_MANAGER="$(ssh -F "$SSH_CFG" "$SWARM_LEADER" "/home/qserv/manager/2.1_print-join-cmd-manager.sh")"
+
+# Join swarm manager nodes:
+for node in $SWARM_NODES
+do
+	if "$node" != "$SWARM_LEADER"; then
+        echo "Join manager $node to swarm cluster"
+		ssh -F "$SSH_CFG" "$node" "$JOIN_CMD_MANAGER"
+    fi
+done
+
 JOIN_CMD="$(ssh -F "$SSH_CFG" "$SWARM_LEADER" "/home/qserv/manager/2_print-join-cmd.sh")"
 
-# Join swarm nodes:
-#   - Qserv master has index 0
-#   - QServ workers have indexes >= 1
-for qserv_node in $MASTER $WORKERS
+# Join swarm worker nodes:
+for node in $MASTER $WORKERS
 do
-    echo "Join $qserv_node to swarm cluster"
-	ssh -F "$SSH_CFG" "$qserv_node" "$JOIN_CMD"
+    echo "Join worker $node to swarm cluster"
+	ssh -F "$SSH_CFG" "$node" "$JOIN_CMD"
 done
