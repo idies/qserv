@@ -50,6 +50,9 @@ QSERV_NETWORK="qserv"
 NETWORK_OPT="--network $QSERV_NETWORK"
 
 docker service rm master || echo "No existing container for $MASTER"
+
+# FIXME: check MASTER_IMAGE and WORKER_IMAGE exist
+
 docker service create --constraint node.hostname=="$MASTER" \
     $DATA_VOLUME_OPT \
     $LOG_VOLUME_OPT \
