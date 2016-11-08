@@ -9,7 +9,7 @@ ssh_security_group: Remote SSH
 
 # Prefix used to name Openstack instances
 # Optional, default to Openstack user name
-instance-prefix:
+# instance-prefix: qserv-
 
 # ssh key used to access Openstack instances
 # Optional, default to ~/.ssh/id_rsa
