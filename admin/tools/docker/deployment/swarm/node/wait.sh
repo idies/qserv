@@ -23,7 +23,7 @@ while true; do
     # FIXME: add container name to avoid using wrong container
     CONTAINER_ID=$(docker ps -q)
     [ -n  "$CONTAINER_ID" ] && break
-    echo "Downloading Qserv container on $(hostname)"
+    echo "Waiting for Qserv container availability on $(hostname)"
     sleep 2
 done
 
