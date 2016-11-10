@@ -28,7 +28,9 @@
 
 # @author  Fabrice Jammes, IN2P3
 
-apt-get --yes install bash \
+apt-get update
+
+apt-get --yes install --fix-missing bash \
     bison \
     bzip2 \
     cmake \

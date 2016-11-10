@@ -71,6 +71,7 @@ Czar::Czar(std::string const& configPath, std::string const& czarName)
     int largeResultPoolSize = _czarConfig.getLargeResultPoolSize();
     rproc::InfileMerger::setLargeResultPoolSize(largeResultPoolSize);
 
+    LOGS(_log, LOG_LVL_DEBUG, "&&& PDAC");
     LOGS(_log, LOG_LVL_INFO, "Creating czar instance with name " << czarName);
     LOGS(_log, LOG_LVL_DEBUG, "Czar config: " << _czarConfig);
 
