@@ -27,15 +27,6 @@ do
         echo "Waiting for Qserv to start on $node"
         sleep 1
     done
-    start=`date +%s`
-    while ! ssh -F "$SSH_CFG" "$MASTER" 'CONTAINER_ID=$(docker ps -l -q); \
-        docker exec "$CONTAINER_ID" curl --connect-timeout 1 -s worker-'${i}':5012'
-    do
-        end=`date +%s`
-        duration=$((end-start))
-        echo "Waiting on master for worker-${i}:5012 availability since $duration ms"
-        sleep 1
-    done
     $DIR/run-query.sh
     i=$((i+1))
 done
